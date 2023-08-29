@@ -67,15 +67,15 @@ class Library{
     # 설정가져오기
     function getConfig(){
 
-        $query = "select * from ".$this->db->tables['config']." where 1";
-        $res = $this->db->query($query);
-        while($row = $this->db->fetch($res)){
-            $data[$row['code']] = $row['data'];
-        }
+        // $query = "select * from ".$this->db->tables['config']." where 1";
+        // $res = $this->db->query($query);
+        // while($row = $this->db->fetch($res)){
+        //     $data[$row['code']] = $row['data'];
+        // }
 
-        if(file_exists('favicon.ico')){
-            $data['favicon'] = 'y';
-        }
+        // if(file_exists('favicon.ico')){
+        //     $data['favicon'] = 'y';
+        // }
 
         return $data;
 

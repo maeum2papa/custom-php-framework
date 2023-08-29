@@ -16,7 +16,13 @@ class Main extends common\FrontLibrary{
 
     function index_(){
 
-        $data = $this->conf->getData(1);
+        $data = Null;
+        // $data = $this->conf->getData(1);
+
+        $data['name'] = 'j';
+
+        $data['list'][] = array("title"=>"제목1");
+        $data['list'][] = array("title"=>"제목2");
 
         $tpl = $this->lib->cfg['skin'].'/main.htm';
         $this->define('tpl', $tpl);

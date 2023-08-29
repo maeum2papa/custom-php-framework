@@ -1,5 +1,5 @@
 <?
-namespace model\admin;
+namespace model;
 use common;
 class Conf extends common\Library{
 
@@ -11,8 +11,8 @@ class Conf extends common\Library{
     }
 
     function getData($data){
-        $query = "select * from ".$this->db->tables['config']." set sno='".$data."'";
-        return $this->db->fetch($query);
+        // $query = "select * from ".$this->db->tables['config']." set sno='".$data."'";
+        // return $this->db->fetch($query);
     }
 
 

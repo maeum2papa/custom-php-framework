@@ -4,14 +4,14 @@ class DBLibrary extends \mysqli{
 
     function __construct() {
 
-        if(!file_exists($_SERVER[DOCUMENT_ROOT]."/common/db.php")){
+        if(!file_exists($_SERVER['DOCUMENT_ROOT']."/common/db.php")){
             Library::debug('Not find DB configuration file.');
             exit;
         }else{
 
-            include $_SERVER[DOCUMENT_ROOT]."/common/db.php";
-
-            parent::__construct($dbinfo['host'],$dbinfo['dbid'],base64_decode($dbinfo['dbpw']),$dbinfo['dbnm']);
+            include $_SERVER['DOCUMENT_ROOT']."/common/db.php";
+			
+            parent::__construct($dbinfo['host'],$dbinfo['dbid'],$dbinfo['dbpw'],$dbinfo['dbnm']);
             
 
             if ($this->connect_error) {
@@ -38,7 +38,7 @@ class DBLibrary extends \mysqli{
     }
 
 
-	function query($query){
+	function query(string $query, int $resultmode = MYSQLI_STORE_RESULT): \mysqli_result|bool {
 		return @parent::query($query);
 	}
 
