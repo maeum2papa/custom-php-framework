@@ -2,23 +2,26 @@
 namespace common;
 class DBLibrary extends \mysqli{
 
-    function __construct() {
+    function __construct($path='') {
 
         if(!file_exists($_SERVER['DOCUMENT_ROOT']."/common/db.php")){
-            Library::debug('Not find DB configuration file.');
+            echo 'Not find DB configuration file.';
             exit;
         }else{
 
-            include $_SERVER['DOCUMENT_ROOT']."/common/db.php";
-			
-            parent::__construct($dbinfo['host'],$dbinfo['dbid'],$dbinfo['dbpw'],$dbinfo['dbnm']);
-            
+            if($path!=''){
+                include $_SERVER['DOCUMENT_ROOT'].'/'.$path;
+            }else{
+                include $_SERVER['DOCUMENT_ROOT']."/common/db.php";
+            }
+
+			parent::__construct($dbinfo['host'],$dbinfo['dbid'],$dbinfo['dbpw'],$dbinfo['dbnm']);
 
             if ($this->connect_error) {
-                print_r($this->connect_error);
-                //Library::debug($this->connect_error);
+                echo $this->connect_error;
                 exit;
             }
+
 
             $table['config']    ='w_config';
             $table['member']    ='w_member';
@@ -38,20 +41,64 @@ class DBLibrary extends \mysqli{
     }
 
 
-	function query(string $query, int $resultmode = MYSQLI_STORE_RESULT): \mysqli_result|bool {
-		return @parent::query($query);
-	}
+	/**
+     *  :: 쿼리실행
+     */
+    function query($query,$type=null,$val=null){
 
-	function fetch($res){
-		if(is_string($res)) $res = $this->query($res);
-		if($res) return @$res->fetch_array();
-	}
+        if($query && !$type && !$val){
+
+            $stmt = @parent::prepare($query);
+            if(!$stmt) return false;
+            if(!$stmt->execute()) return false;
+
+            if(preg_match("/^select/i",$query)){
+                return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            }else{
+                return true;
+            }
+
+        }else{
+
+            if(!is_array($val)) $val = array($val);
+
+            $stmt = @parent::prepare($query);
+            if(!$stmt) return false;
+            $params = array_merge(array($type),$val);
+            $tmp = array();
+
+            foreach($params as $k => $v) $tmp[$k] = &$params[$k];
+
+            call_user_func_array(array($stmt,'bind_param'),$tmp);
+
+            if(!$stmt->execute()) return false;
 
 
-	function rows($res){
-		if(is_string($res)) $res = $this->query($res);
-		return @$res->num_rows;
-	}
+            if(preg_match("/^select/i",$query)){
+                return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            }else{
+                return true;
+            }
+
+        }
+
+
+    }
+
+    
+
+
+	/**
+     *  :: 데이터 수 가져오기
+     */
+    function rows($query,$type=null,$val=null){
+        if(preg_match("/^select/",$query)){
+            $res = $this->query($query,$type,$val);
+            $result = count($res);
+        }
+
+        return $result;
+    }
 
 	function last(){
 		return @$this->insert_id;
