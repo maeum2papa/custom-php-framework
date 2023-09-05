@@ -11,8 +11,10 @@ class Conf extends common\Library{
     }
 
     function getData($data){
-        // $query = "select * from ".$this->db->tables['config']." set sno='".$data."'";
-        // return $this->db->fetch($query);
+        // $query = "select count(sno) as cnt from ".$this->table." where sno=?";
+        // $row = $this->db->query($query,"i",array($sno));
+        
+        // return $row[0]['cnt'];
     }
 
 
