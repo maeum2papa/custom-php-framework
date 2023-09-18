@@ -8,3 +8,4 @@
 - 참여율 : 100%
 - 개발 기간 : 6m
 - 사용 기술 : PHP, MariaDB, NAS, jQuery, HTML, CSS
+- php.ini short_open_tag=On
